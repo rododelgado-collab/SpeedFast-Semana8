@@ -159,7 +159,7 @@ muestran un texto legible, `id - nombre` o `id - dirección (tipo)`, pero conser
 | Nombre del repartidor | Obligatorio, 2 a 100 caracteres, parte con una letra (acepta tildes, eñes, espacios, puntos, apóstrofes y guiones), sin repetir un nombre ya registrado |
 | Dirección del pedido | Obligatoria, 5 a 100 caracteres |
 | Tipo y estado | Obligatorios (se eligen en un `JComboBox`) |
-| Entrega | Pedido y repartidor obligatorios; fecha con formato `AAAA-MM-DD` y que exista en el calendario; hora con formato `HH:MM` o `HH:MM:SS` |
+| Entrega | Pedido y repartidor obligatorios; fecha con formato `AAAA-MM-DD`, que exista en el calendario, **de este año y no posterior a hoy** (una fecha de un año anterior o futura se rechaza); hora con formato `HH:MM` o `HH:MM:SS`. Una entrega antigua que ya estaba guardada se puede seguir editando mientras no se cambie su fecha |
 | Editar o eliminar | Debe haber una fila seleccionada; el registro no puede haber desaparecido de la base de datos |
 
 Los espacios sobrantes se limpian antes de guardar. Los mensajes de error indican qué corregir.

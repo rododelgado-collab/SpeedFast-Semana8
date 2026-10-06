@@ -49,7 +49,9 @@ public class ControladorEntregas {
      */
     public Entrega crear(Pedido pedido, Repartidor repartidor, String fecha, String hora) {
         exigirRelaciones(pedido, repartidor);
-        Entrega entrega = new Entrega(0, pedido.getId(), repartidor.getId(), leerFecha(fecha), leerHora(hora));
+        LocalDate dia = leerFecha(fecha);
+        exigirFechaEnRango(dia);
+        Entrega entrega = new Entrega(0, pedido.getId(), repartidor.getId(), dia, leerHora(hora));
         entregaDAO.create(entrega);
         eventos.registrarEvento("Entrega #" + entrega.getId() + " registrada: pedido #" + pedido.getId()
                 + " con " + repartidor.getNombre() + " (" + entrega.getFecha() + " " + entrega.getHora() + ").");
@@ -90,7 +92,13 @@ public class ControladorEntregas {
             throw new IllegalArgumentException("Seleccione una entrega de la tabla.");
         }
         exigirRelaciones(pedido, repartidor);
-        Entrega entrega = new Entrega(id, pedido.getId(), repartidor.getId(), leerFecha(fecha), leerHora(hora));
+        LocalDate dia = leerFecha(fecha);
+        Entrega actual = entregaDAO.readById(id);
+        // Una entrega antigua se puede seguir editando si no se cambia su fecha
+        if (actual == null || !dia.equals(actual.getFecha())) {
+            exigirFechaEnRango(dia);
+        }
+        Entrega entrega = new Entrega(id, pedido.getId(), repartidor.getId(), dia, leerHora(hora));
         if (!entregaDAO.update(entrega)) {
             throw new IllegalArgumentException("La entrega #" + id + " ya no existe en la base de datos.");
         }
@@ -216,6 +224,19 @@ public class ControladorEntregas {
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("La fecha no es válida. Use el formato AAAA-MM-DD, "
                     + "por ejemplo 2026-10-05.");
+        }
+    }
+
+    /** La fecha de una entrega nueva debe ser de este año y no puede ser futura. */
+    private void exigirFechaEnRango(LocalDate dia) {
+        LocalDate hoy = LocalDate.now();
+        if (dia.getYear() < hoy.getYear()) {
+            throw new IllegalArgumentException("La fecha " + dia + " es de un año anterior. "
+                    + "Ingrese una fecha de este año (desde " + hoy.getYear() + "-01-01).");
+        }
+        if (dia.isAfter(hoy)) {
+            throw new IllegalArgumentException("La fecha " + dia + " aún no ocurre. "
+                    + "La entrega no puede tener una fecha posterior a hoy (" + hoy + ").");
         }
     }
 
