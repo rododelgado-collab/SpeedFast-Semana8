@@ -215,3 +215,45 @@ conectada se llama `*_test`; en otro caso se **omiten** con un aviso en la conso
   `RepartidorDAO`.
 - Se mantienen `create()`, `readAll()`, `update()` y `delete()` en los tres DAO, tal como se pidió, más consultas
   adicionales (`readById`, filtros y conteos).
+
+## Evidencias de funcionamiento
+
+Capturas de la aplicación y de MySQL Workbench en la carpeta `evidencias/`.
+
+**Repartidores:** tabla cargada desde MySQL, edición de un registro (al seleccionar una fila se habilitan *Actualizar* y
+*Eliminar*) y validación del nombre.
+
+![Tabla de repartidores](evidencias/01_repartidores_tabla.png)
+
+![Edición de un repartidor](evidencias/02_repartidores_edicion.png)
+
+![Validación del nombre](evidencias/03_repartidores_validacion_nombre.png)
+
+**Pedidos:** filtros opcionales por estado y tipo, y aviso al intentar eliminar un pedido que tiene entregas
+(clave foránea).
+
+![Filtros de pedidos](evidencias/04_pedidos_filtros.png)
+
+![Eliminar un pedido con entregas](evidencias/05_pedidos_eliminar_con_entregas.png)
+
+**Entregas:** combos con texto legible (`id - dirección (tipo)`) que conservan el id, filtro por pedido o repartidor, y
+validación de la fecha (se rechaza una fecha de un año anterior o futura).
+
+![Combos de pedido y repartidor](evidencias/06_entregas_combos.png)
+
+![Filtro de entregas por pedido](evidencias/07_entregas_filtro_por_pedido.png)
+
+![Fecha de un año anterior](evidencias/08_entregas_fecha_anio_anterior.png)
+
+![Fecha futura](evidencias/09_entregas_fecha_futura.png)
+
+**Ventana principal:** bitácora con el CRUD y la simulación de una entrega en un hilo (el pedido #7 pasa a
+EN_REPARTO y a los 3 segundos queda ENTREGADO).
+
+![Bitácora de actividad](evidencias/10_actividad_simulacion.png)
+
+**MySQL Workbench:** los datos quedan guardados en `speedfast_db`.
+
+![SELECT entregas](evidencias/11_workbench_select_entregas.png)
+
+![SELECT pedidos](evidencias/12_workbench_select_pedidos.png)
